@@ -36,11 +36,13 @@ class LessonList extends Component {
         if (course.length === 0) return (<p>404 Course not found.</p>);
 
         return (
-            <div className="col">
-                <CourseList /><br />
-                <table className="table table-bordered col-xs-12">
-                    {this.renderList(course[0].lessons)}
-                </table>
+            <div className="row">
+                <CourseList />
+                <div className="col-sm-8">
+                    <table className="table table-bordered">
+                        {this.renderList(course[0].lessons)}
+                    </table>
+                </div>
             </div>
         )
     }

@@ -35,7 +35,7 @@ class LessonLearn extends Component {
                 <table className="table table-bordered">
                     {this.renderLesson(lesson[0].vocab)}
                 </table>
-                <Link to={`/`} >Home</Link>
+                <Link to={`/`} >Home</Link> - <Link to={`/course/${course[0].title}`} >Back to course</Link>
             </div>
         )
     }
