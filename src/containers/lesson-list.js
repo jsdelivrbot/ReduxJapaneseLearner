@@ -47,6 +47,39 @@ class LessonList extends Component {
         });
     }
 
+    renderLessonsTable(course) {
+        if (course.lessons.length === 0) {
+            return (
+              <div className="col-sm-8">
+                  <p>No lessons found.</p>
+              </div>
+            );
+        }
+
+        return (
+            <div className="col-sm-8">
+                <table className="table table-bordered">
+                    <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Vocab</td>
+                        <td>Test</td>
+                        <td>Learn</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.renderList(course.lessons)}
+                    </tbody>
+                </table>
+                <button
+                    type="button"
+                    className={`btn btn-${this.state.lessons.length === 0 ? 'disabled' : 'primary'}`}
+                    onClick={() => this.onStartTestClick(course.title)}
+                >Start test</button>
+            </div>
+        );
+    }
+
     render() {
         const title = this.props.match.params.course;
         const course = _.filter(this.props.courses, course => course.title === title);
@@ -61,26 +94,7 @@ class LessonList extends Component {
         return (
             <div className="row">
                 <CourseList {...this.props} />
-                <div className="col-sm-8">
-                    <table className="table table-bordered">
-                        <thead>
-                            <tr>
-                                <td>Name</td>
-                                <td>Vocab</td>
-                                <td>Test</td>
-                                <td>Learn</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.renderList(course[0].lessons)}
-                        </tbody>
-                    </table>
-                    <button
-                        type="button"
-                        className={`btn btn-${this.state.lessons.length === 0 ? 'disabled' : 'primary'}`}
-                        onClick={() => this.onStartTestClick(course.title)}
-                    >Start test</button>
-                </div>
+                { this.renderLessonsTable(course[0]) }
             </div>
         )
     }

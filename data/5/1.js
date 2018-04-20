@@ -39,6 +39,6 @@ export default function() {
         {english: 'Yamada', romaji: 'yamada', syllabies: 'やまだ', kanji: '山田'},
         {english: 'Sato', romaji: 'sato', syllabies: 'さと', kanji: '佐藤'},
         {english: 'Suzuki', romaji: 'suzuki', syllabies: 'すずき', kanji: '鈴木'},
-        {english: 'kyooshitsu', romaji: 'kyooshitsu', syllabies: 'きょうしつ', kanji: '教室'},
+        {english: 'classroom', romaji: 'kyooshitsu', syllabies: 'きょうしつ', kanji: '教室'},
     ];
 }

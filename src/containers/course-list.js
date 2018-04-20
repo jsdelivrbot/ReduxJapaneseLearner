@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import _ from 'lodash';
 
 class CourseList extends Component {
     renderList() {
         return this.props.courses.map(course => {
+            const link = this.props.match.params.course === course.title ?
+                <span className={"text-warning"}>{course.title}</span> :
+                <Link to={`/course/${course.title}`}>
+                    {course.title}
+                </Link>
+            ;
+
             return (
                 <li
                     key={course.title}
                     className="list-group-item" >
-                        <Link to={`/course/${course.title}`}>
-                            {course.title}
-                        </Link>
+                    {link}
                 </li>
              );
         });
     }
 
     render() {
-        // if(!this.props.match.params.course)
-        //     return <Redirect to={`/course/${this.props.courses[0].title}`} />;
+        if(_.keys(this.props.match.params).length === 0)
+            return <Redirect to={`/course/${this.props.courses[0].title}`} />;
 
-        console.log(_.isEmpty(this.props.match.params));
         return (
             <ul className="list-group col-sm-4">
                     {this.renderList()}
