@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 class CourseList extends Component {
     renderList() {
@@ -18,6 +18,10 @@ class CourseList extends Component {
     }
 
     render() {
+        // if(!this.props.match.params.course)
+        //     return <Redirect to={`/course/${this.props.courses[0].title}`} />;
+
+        console.log(_.isEmpty(this.props.match.params));
         return (
             <ul className="list-group col-sm-4">
                     {this.renderList()}
