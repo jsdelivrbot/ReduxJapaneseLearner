@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import TestType from "./test-type";
+
+import PreviousAnswer from './previous-answer';
+import TestType from './test-type';
+import Question from './question';
 
 class CourseTest extends Component {
     constructor() {
         super();
-        this.state = { loaded: false, step: 'start' }
+        this.state = {};
 
         this.startTest = this.startTest.bind(this);
+        this.onQuestionAnswer = this.onQuestionAnswer.bind(this);
     }
 
     componentWillMount() {
@@ -19,25 +23,40 @@ class CourseTest extends Component {
     setUpLesson() {
         const { title, slug } = this.props.match.params;
         const course = _.filter(this.props.courses, course => course.title === title);
-        if (course.length === 0) return { loaded: false };
+        if (course.length === 0) return {};
 
         const indexes = slug.split('-');
         const lessons = _.filter(course[0].lessons, lesson => _.indexOf(indexes, lesson.index) !== -1);
-        if (lessons.length === 0) return { loaded: false };
+        if (lessons.length === 0) return {};
 
-        return { loaded: true, lessons };
+        return { lessons };
     }
 
     startTest(type) {
+        const index = 1;
         let questions = [];
         const { lessons } = this.state;
         _.each(lessons, lesson => questions = _.concat(questions, lesson.vocab));
         questions = _.shuffle(questions);
-        this.setState({ questions, score: 0, count: questions.length, type });
+        this.setState({ questions, score: 0, count: questions.length, type, index });
     }
 
-    onQuestionAnswer(correct) {
-        const { questions, score } = this.state;
+    onQuestionAnswer(answer) {
+        let { questions, score, index, type } = this.state;
+        const question = questions[0];
+        const expected = type === 'etr' ? question.romaji : question.english;
+        const valid = this.answerCheck(question, type, answer);
+        if (valid) score++;
+
+        index++;
+        questions = _.takeRight(questions, questions.length - 1);
+        this.setState({ questions, score, index, answer, expected, valid });
+    }
+
+    answerCheck(question, type, value) {
+        return (type === 'etr' && question.romaji === value)
+            || (type === 'kte' && question.english === value)
+            ;
     }
 
     renderStartBlock() {
@@ -45,18 +64,39 @@ class CourseTest extends Component {
     }
 
     renderQuestionBlock() {
-        const { questions, type, score, count } = this.state;
-        return (<Question
-            onClick={() => this.onQuestionAnswer}
-            question={questions[0]}
-            score
-            count
-            type
-        />);
+        const { expected, answer, valid,
+            questions, type, score, count, index } = this.state;
+        return (
+            <div>
+                <Question
+                    onSubmit={this.onQuestionAnswer}
+                    question={questions[0]}
+                    score={score}
+                    count={count}
+                    index={index}
+                    type={type}
+                />
+                <PreviousAnswer
+                    expected={expected}
+                    answer={answer}
+                    valid={valid}
+                />
+            </div>
+        );
     }
 
     renderEndBlock() {
-
+        const { expected, answer, valid, score, count } = this.state;
+        return(
+                <div>
+                <p>Score : {score}/{count}</p>
+                <PreviousAnswer
+                    expected={expected}
+                    answer={answer}
+                    valid={valid}
+                />
+            </div>
+        );
     }
 
     renderStepBlock() {
@@ -70,13 +110,11 @@ class CourseTest extends Component {
     }
 
     render() {
-        if (!this.state.loaded) {
+        if (!this.state.lessons) {
             return (<p>Error loading. <Link to={`/`}>Back to home</Link>.</p>)
         }
 
         const { title } = this.props.match.params;
-        const { lesson } = this.state;
-        console.log(this.state.questions);
 
         return (
             <div>

@@ -5,13 +5,13 @@ class TestType extends Component {
         return(
             <div>
                 <button
-                    onClick={() => this.props.startTest('eto')}
+                    onClick={() => this.props.startTest('etr')}
                     type="button"
                     className="btn btn-primary"
                 >English to romaji.</button>
                 <br /><br />
                 <button
-                    onClick={() => this.props.startTest('kto')}
+                    onClick={() => this.props.startTest('kte')}
                     type="button"
                     className="btn btn-primary"
                 >Kanji (kana) to english.</button>
